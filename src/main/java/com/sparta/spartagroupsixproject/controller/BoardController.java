@@ -11,7 +11,7 @@ public class BoardController {
 
 
     private final BoardService boardService;
-//    hi 123
+//    hi 123423
 
 //    @GetMapping("/board/list")
 //    public ResponseEntity<List<BoardResponseDto>> getAll(){
