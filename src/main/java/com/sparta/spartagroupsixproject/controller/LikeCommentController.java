@@ -25,9 +25,16 @@ public class LikeCommentController {
         return new ResponseEntity(restApiResponse, HttpStatus.OK);
     }
 
+    @PostMapping("/comment/{id}/dislike")
+    public ResponseEntity cancelLike(@PathVariable Long id, HttpServletRequest request) throws Exception {
+        String msg = likeCommentService.cancelFavorite(id, request);
+        RestApiResponse restApiResponse = new RestApiResponse(HttpStatus.OK, msg);
+        return new ResponseEntity(restApiResponse, HttpStatus.OK);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handlerApiRequestException(IllegalArgumentException e) {
-        RestApiResponse restApiResponse = new RestApiResponse(HttpStatus.BAD_REQUEST,e.getMessage());
+        RestApiResponse restApiResponse = new RestApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
         return new ResponseEntity<>(restApiResponse, HttpStatus.BAD_REQUEST);
     }
 }

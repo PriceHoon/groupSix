@@ -29,7 +29,7 @@ public class LikeCommentService {
         Comment comment = commentRepository.findById(CommnetId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
         if (!likeCommentRepository.existsByUserAndComment(user, comment)) {
-            LikeComment likeComment = likeCommentRepository.save(new LikeComment(comment, user));
+            LikeComment likeComment = new LikeComment(comment, user);
             likeCommentRepository.save(likeComment);
             return "좋아요를 누르셨습니다";
         }
@@ -37,6 +37,22 @@ public class LikeCommentService {
             throw new Exception("해당 댓글에는 이미 좋아요를 눌렀습니다");
         }
 
+    }
+    public String cancelFavorite(Long CommnetId, HttpServletRequest request) throws Exception {
+        String token = jwtUtil.resolveToken(request);
+        Claims claims = createClaims(token);
+        String username = claims.getSubject();
+        User user = userRepository.findByUsername(username);
+        Comment comment = commentRepository.findById(CommnetId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
+
+        if (likeCommentRepository.existsByUserAndComment(user, comment)) {
+            LikeComment likeComment = new LikeComment(comment, user);
+            likeCommentRepository.delete(likeComment);
+            return "좋아요를 취소하였습니다";
+        }
+        else {
+            throw new Exception("해당 댓글에 좋아요를 누른 기록이 존재하지않습니다.");
+        }
     }
 
     private Claims createClaims(String token){
@@ -53,4 +69,6 @@ public class LikeCommentService {
             throw new IllegalArgumentException("해당 토큰은 값을 가지고 있지않습니다");
         }
     }
+
+
 }
