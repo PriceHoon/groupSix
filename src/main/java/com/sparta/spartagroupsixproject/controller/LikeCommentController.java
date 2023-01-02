@@ -22,5 +22,5 @@ public class LikeCommentController {
         String msg = likeCommentService.clickFavorite(id, request);
         return new ResponseEntity("msg : " + msg,HttpStatus.OK);
     }
-    
+
 }
