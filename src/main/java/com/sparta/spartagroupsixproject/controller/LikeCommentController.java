@@ -2,6 +2,7 @@ package com.sparta.spartagroupsixproject.controller;
 
 
 import com.sparta.spartagroupsixproject.dto.RestApiResponse;
+import com.sparta.spartagroupsixproject.jwt.Filter;
 import com.sparta.spartagroupsixproject.service.LikeCommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class LikeCommentController {
 
     private final LikeCommentService likeCommentService;
+    private final Filter filter;
 
     @PostMapping("/comment/{id}/like")
     public ResponseEntity update(@PathVariable Long id, HttpServletRequest request) throws Exception {
-        String msg = likeCommentService.clickFavorite(id, request);
+        String username = filter.checkUser(request);
+        String msg = likeCommentService.clickFavorite(id, username);
         RestApiResponse restApiResponse = new RestApiResponse(HttpStatus.OK, msg);
         return new ResponseEntity(restApiResponse, HttpStatus.OK);
     }
 
     @PostMapping("/comment/{id}/dislike")
     public ResponseEntity cancelLike(@PathVariable Long id, HttpServletRequest request) throws Exception {
-        String msg = likeCommentService.cancelFavorite(id, request);
+        String username = filter.checkUser(request);
+        String msg = likeCommentService.cancelFavorite(id, username);
         RestApiResponse restApiResponse = new RestApiResponse(HttpStatus.OK, msg);
         return new ResponseEntity(restApiResponse, HttpStatus.OK);
     }

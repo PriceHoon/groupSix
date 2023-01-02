@@ -12,61 +12,45 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
 @RequiredArgsConstructor
 public class LikeCommentService {
 
     private final LikeCommentRepository likeCommentRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
 
-    public String clickFavorite(Long CommnetId, HttpServletRequest request) throws Exception {
-        String token = jwtUtil.resolveToken(request);
-        Claims claims = createClaims(token);
-        String username = claims.getSubject();
+
+    @Transactional
+    public String clickFavorite(Long CommnetId, String username) throws Exception {
         User user = userRepository.findByUsername(username);
         Comment comment = commentRepository.findById(CommnetId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
         if (!likeCommentRepository.existsByUserAndComment(user, comment)) {
-            LikeComment likeComment = new LikeComment(comment, user);
+            LikeComment likeComment = new LikeComment(user, comment);
             likeCommentRepository.save(likeComment);
             return "좋아요를 누르셨습니다";
-        }
-        else {
+        } else {
             throw new Exception("해당 댓글에는 이미 좋아요를 눌렀습니다");
         }
 
     }
-    public String cancelFavorite(Long CommnetId, HttpServletRequest request) throws Exception {
-        String token = jwtUtil.resolveToken(request);
-        Claims claims = createClaims(token);
-        String username = claims.getSubject();
+
+    @Transactional
+    public String cancelFavorite(Long CommnetId, String username) throws Exception {
+
         User user = userRepository.findByUsername(username);
         Comment comment = commentRepository.findById(CommnetId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
         if (likeCommentRepository.existsByUserAndComment(user, comment)) {
-            LikeComment likeComment = new LikeComment(comment, user);
+            LikeComment likeComment = new LikeComment(user, comment);
             likeCommentRepository.delete(likeComment);
             return "좋아요를 취소하였습니다";
-        }
-        else {
+        } else {
             throw new Exception("해당 댓글에 좋아요를 누른 기록이 존재하지않습니다.");
-        }
-    }
-
-    private Claims createClaims(String token){
-        Claims claims;
-        if (token != null) {
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-                return claims;
-            }
-            else{
-                throw new IllegalArgumentException("해당 토큰은 유효하지않습니다");
-            }
-        }else{
-            throw new IllegalArgumentException("해당 토큰은 값을 가지고 있지않습니다");
         }
     }
 
