@@ -2,11 +2,13 @@ package com.sparta.spartagroupsixproject.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class LikeComment {
 
@@ -22,7 +24,7 @@ public class LikeComment {
     @JoinColumn(name = "userID")
     private User user;
 
-    public LikeComment(Comment comment, User user) {
+    public LikeComment(User user,Comment comment) {
         this.Comment = comment;
         this.user = user;
     }
