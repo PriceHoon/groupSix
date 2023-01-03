@@ -3,7 +3,6 @@ package com.sparta.spartagroupsixproject.entity;
 
 import com.sparta.spartagroupsixproject.dto.BoardRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 
-public class Board  extends  Timestamped{
+public class Board  extends TimeStamped {
 
 
 
