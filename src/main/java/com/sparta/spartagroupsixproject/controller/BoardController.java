@@ -1,22 +1,44 @@
 package com.sparta.spartagroupsixproject.controller;
 
 
+import com.sparta.spartagroupsixproject.dto.BoardRequestDto;
+import com.sparta.spartagroupsixproject.dto.BoardResponseDto;
 import com.sparta.spartagroupsixproject.service.BoardService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 public class BoardController {
 
-
     private final BoardService boardService;
-//    hi 123423
 
+//     게시글 생성
+    @PostMapping("/board/list")
+    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto, HttpServletRequest request) {
+        // 응답 보내기
+        return boardService.createBoard(requestDto, request);
+
+    }
+    // 게시물 전체,이름 조회
 //    @GetMapping("/board/list")
-//    public ResponseEntity<List<BoardResponseDto>> getAll(){
-//        return boardService.getAll();
+//    public ResponseEntity<List<BoardResponseDto>> getBoardByUsername@RequestParam(required = false) String username){
+//        if (username == null){
+//            return boardService.getBoardAll();
+//        }else return  boardService.getBoardByUsername(username);
 //    }
+
+
+
+//     게시글 전체 조회
+    @GetMapping("/board/list")
+    public ResponseEntity<List<BoardResponseDto>> getBoardList(){
+        return (ResponseEntity<List<BoardResponseDto>>) boardService.getBoardAll();
+    }
 
    //@PostMapping("/board/list")
 //    public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDTO boardDto, HttpServletRequest request){
