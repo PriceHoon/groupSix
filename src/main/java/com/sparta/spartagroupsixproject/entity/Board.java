@@ -2,6 +2,7 @@ package com.sparta.spartagroupsixproject.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
 public class Board {
 
 

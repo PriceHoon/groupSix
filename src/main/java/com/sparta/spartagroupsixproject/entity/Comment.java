@@ -2,12 +2,14 @@ package com.sparta.spartagroupsixproject.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
 public class Comment {
 
     @Id
