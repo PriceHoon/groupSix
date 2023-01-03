@@ -41,9 +41,10 @@ public class Board  extends TimeStamped {
     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    public Board (BoardRequestDto requestDto){
+    public Board (BoardRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
         this.contents =requestDto.getContents();
+        this.user = user;
     }
 
 
