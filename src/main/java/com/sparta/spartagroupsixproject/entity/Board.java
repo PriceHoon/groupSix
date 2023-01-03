@@ -1,6 +1,7 @@
 package com.sparta.spartagroupsixproject.entity;
 
 
+import com.sparta.spartagroupsixproject.dto.BoardRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,8 +13,10 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-@AllArgsConstructor
-public class Board {
+
+public class Board  extends  Timestamped{
+
+
 
 
     @Id
@@ -23,15 +26,26 @@ public class Board {
     @Column(nullable = false)
     private String title;
 
+    @Column
+    private String username;
+
     @Column(nullable = false)
-    private String content;
+    private String contents;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
+//    @Column(name = "users_username")
+//    private String username;
+
     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    public Board (BoardRequestDto requestDto){
+        this.title = requestDto.getTitle();
+        this.contents =requestDto.getContents();
+    }
 
 
     //댓글 관련 연관관계 아직 신경 안쓰셔도 됩니다!
