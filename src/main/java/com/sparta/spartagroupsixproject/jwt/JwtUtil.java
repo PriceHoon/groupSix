@@ -45,7 +45,7 @@ public class JwtUtil {
 
     // header 토큰을 가져오기
     public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);   //Authorization bearer 띄고 Token == 토큰으로 나 자신을 인증하겠다
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
