@@ -1,5 +1,6 @@
 package com.sparta.spartagroupsixproject.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -15,9 +16,10 @@ import java.time.LocalDateTime;
 public class TimeStamped {
 
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column
     private LocalDateTime modifiedAt;
-
 }
