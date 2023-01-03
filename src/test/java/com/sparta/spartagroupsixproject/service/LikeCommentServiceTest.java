@@ -35,14 +35,13 @@ class LikeCommentServiceTest {
 
         //given
         User user = mock(User.class);
-//        System.out.println(user.getUsername());
+        System.out.println(user.getUsername());
         Comment comment = mock(Comment.class);
         when(user.getUsername()).thenReturn("userA");
         when(comment.getId()).thenReturn(1L);
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(user);
         when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
         when(likeCommentRepository.existsByUserAndComment(user, comment)).thenReturn(false);
-
         //when
         String s = likeCommentService.clickFavorite(comment.getId(), user.getUsername());
 
@@ -52,12 +51,6 @@ class LikeCommentServiceTest {
 
     @Test
     void cancelFavorite() {
-
-        //given
-
-        //when
-
-        //then
 
     }
 }
