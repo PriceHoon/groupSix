@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class LikeComment {
 
@@ -18,14 +17,14 @@ public class LikeComment {
 
     @ManyToOne
     @JoinColumn(name = "commentID")
-    private Comment Comment;
+    private Comment comment;
 
     @ManyToOne
     @JoinColumn(name = "userID")
     private User user;
 
     public LikeComment(User user,Comment comment) {
-        this.Comment = comment;
+        this.comment = comment;
         this.user = user;
     }
 }

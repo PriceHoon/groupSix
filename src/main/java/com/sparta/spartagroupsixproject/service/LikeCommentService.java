@@ -3,15 +3,10 @@ package com.sparta.spartagroupsixproject.service;
 import com.sparta.spartagroupsixproject.entity.Comment;
 import com.sparta.spartagroupsixproject.entity.LikeComment;
 import com.sparta.spartagroupsixproject.entity.User;
-import com.sparta.spartagroupsixproject.jwt.JwtUtil;
-import com.sparta.spartagroupsixproject.repository.BoardRepository;
 import com.sparta.spartagroupsixproject.repository.CommentRepository;
 import com.sparta.spartagroupsixproject.repository.LikeCommentRepository;
 import com.sparta.spartagroupsixproject.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +20,9 @@ public class LikeCommentService {
 
 
     @Transactional
-    public String clickFavorite(Long CommnetId, String username) throws Exception {
+    public String clickFavorite(Long CommentId, String username) throws Exception {
         User user = userRepository.findByUsername(username).orElseThrow(()-> new IllegalArgumentException("권한이 없는 회원입니다."));
-        Comment comment = commentRepository.findById(CommnetId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
+        Comment comment = commentRepository.findById(CommentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
         if (!likeCommentRepository.existsByUserAndComment(user, comment)) {
             LikeComment likeComment = new LikeComment(user, comment);
@@ -40,10 +35,10 @@ public class LikeCommentService {
     }
 
     @Transactional
-    public String cancelFavorite(Long CommnetId, String username) throws Exception {
+    public String cancelFavorite(Long CommentId, String username) throws Exception {
 
         User user = userRepository.findByUsername(username).orElseThrow(()-> new IllegalArgumentException("권한이 없는 회원입니다."));
-        Comment comment = commentRepository.findById(CommnetId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
+        Comment comment = commentRepository.findById(CommentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
         if (likeCommentRepository.existsByUserAndComment(user, comment)) {
             LikeComment likeComment = new LikeComment(user, comment);
