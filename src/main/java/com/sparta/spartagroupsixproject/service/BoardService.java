@@ -1,5 +1,6 @@
 package com.sparta.spartagroupsixproject.service;
 
+
 import com.sparta.spartagroupsixproject.dto.BoardRequestDto;
 import com.sparta.spartagroupsixproject.dto.BoardResponseDto;
 import com.sparta.spartagroupsixproject.entity.Board;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
+
 
 public class BoardService {
 
