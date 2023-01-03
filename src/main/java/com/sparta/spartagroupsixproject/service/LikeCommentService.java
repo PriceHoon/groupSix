@@ -26,7 +26,7 @@ public class LikeCommentService {
 
     @Transactional
     public String clickFavorite(Long CommnetId, String username) throws Exception {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new IllegalArgumentException("존재하지않는 회원입니다"));
         Comment comment = commentRepository.findById(CommnetId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
         if (!likeCommentRepository.existsByUserAndComment(user, comment)) {
@@ -42,7 +42,7 @@ public class LikeCommentService {
     @Transactional
     public String cancelFavorite(Long CommnetId, String username) throws Exception {
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new IllegalArgumentException("존재하지않는 회원입니다"));
         Comment comment = commentRepository.findById(CommnetId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
         if (likeCommentRepository.existsByUserAndComment(user, comment)) {
