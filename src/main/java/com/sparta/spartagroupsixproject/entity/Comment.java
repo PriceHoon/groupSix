@@ -1,15 +1,16 @@
 package com.sparta.spartagroupsixproject.entity;
 
 
-import com.sparta.spartagroupsixproject.dto.CommentRequestDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Comment extends TimeStamped {
+@AllArgsConstructor
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,13 +29,13 @@ public class Comment extends TimeStamped {
 
 
     //각 역할에 맞는 Dto는 이름만 맞춰서 만들어 작업해주세요!
-    public Comment(CommentRequestDto requestDto, User user, Board board) {
-        this.content = requestDto.getContent;
-        this.user = user;
-        this.board = board;
-    }
+//    public Comment(CommentRequestDto requestDto,User user, Board board) {
+//        this.contents = requestDto.getContents();
+//        this.user = user;
+//        this.board = board;
+//    }
 
-    public void update(CommentRequestDto requestDto){
-        this.content = requestDto.getContent();
-    }
+//    public void update(CommentRequestDto requestDto){
+//        this.contents = requestDto.getContents();
+//    }
 }
