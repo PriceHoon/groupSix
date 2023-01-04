@@ -48,6 +48,10 @@ public class Board  extends TimeStamped {
         this.user = user;
         this.likenum = 0L;
     }
+    public void update(BoardRequestDto requestDto){
+        this.title = requestDto.getTitle();
+        this.contents =requestDto.getContents();
+    }
 
     public void updateLikeNum(Long likenum){
         this.likenum = likenum;
