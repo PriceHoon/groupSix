@@ -52,7 +52,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public String login(LoginRequestDto loginRequestDto) {
+    public String login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String username = loginRequestDto.getUsername();
         String password = loginRequestDto.getPassword();
 
@@ -64,8 +64,8 @@ public class UserService {
         // 비밀번호 확인
         if (password.equals(user.getPassword())) {
             String generatedToken = jwtUtil.createToken(user.getUsername(), user.getUserRoleEnum());
-
-            return generatedToken;
+            response.addHeader(JwtUtil.AUTHORIZATION_HEADER, generatedToken);
+            return "로그인 성공!";
         } else {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
         }
