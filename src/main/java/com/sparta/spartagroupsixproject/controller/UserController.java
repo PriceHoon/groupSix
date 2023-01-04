@@ -6,13 +6,14 @@ import com.sparta.spartagroupsixproject.dto.StatusResponseDto;
 import com.sparta.spartagroupsixproject.jwt.JwtUtil;
 import com.sparta.spartagroupsixproject.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,9 +23,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<StatusResponseDto> singup(@RequestBody SignupRequestDto requestDto){
 
+    @PostMapping("/signup")
+    public ResponseEntity<StatusResponseDto> signup(@RequestBody @Valid SignupRequestDto requestDto) {
         String msg = userService.signup(requestDto);
         StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.OK);
 
@@ -32,22 +33,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        String generatedToken = userService.login(loginRequestDto);
 
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, generatedToken);
+    public ResponseEntity<StatusResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
 
-        return "로그인 성공!";
+        String msg = userService.login(requestDto, response);
+        StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.OK);
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
-
-
-//    public ResponseEntity login(HttpServletResponse response){
-//        //토큰을 보내기 위한 response객체
-//        //login할 때도 마찬가지로 dto가 필요합니다!
-//
-//        //userService.login(loginRequestDto,response);
-//        return ResponseEntity.status(HttpStatus.OK).body("Dto 자리가 될겁니다..!");
-//    }
-
-
 }
+
+//    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+//        String generatedToken = userService.login(loginRequestDto);
+//
+//        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, generatedToken);
