@@ -21,7 +21,7 @@ public class LikeCommentService {
 
     @Transactional
     public String clickFavorite(Long CommentId, String username) throws Exception {
-        User user = userRepository.findByUsername(username).orElseThrow(()-> new IllegalArgumentException("권한이 없는 회원입니다."));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("권한이 없는 회원입니다."));
         Comment comment = commentRepository.findById(CommentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
         if (!likeCommentRepository.existsByUserAndComment(user, comment)) {
@@ -37,7 +37,7 @@ public class LikeCommentService {
     @Transactional
     public String cancelFavorite(Long CommentId, String username) throws Exception {
 
-        User user = userRepository.findByUsername(username).orElseThrow(()-> new IllegalArgumentException("권한이 없는 회원입니다."));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("권한이 없는 회원입니다."));
         Comment comment = commentRepository.findById(CommentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
         if (likeCommentRepository.existsByUserAndComment(user, comment)) {
@@ -49,5 +49,10 @@ public class LikeCommentService {
         }
     }
 
-
+    @Transactional
+    public String getCountLike(Long id) {
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Comment 입니다"));
+        Long count = likeCommentRepository.findAllByComment(comment).stream().count();
+        return "현재 좋아요 갯수는 " + count +"개 입니다.";
+    }
 }
