@@ -24,7 +24,7 @@ public class UserService {
 //    private final PasswordEncoder passwordEncoder;
 
     // ADMIN_TOKEN
-    private static final String ADMIN_TOKEN = "";
+    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     @Transactional
     public String signup(SignupRequestDto signupRequestDto) {
