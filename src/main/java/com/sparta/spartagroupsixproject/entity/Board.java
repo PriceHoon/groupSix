@@ -33,26 +33,30 @@ public class Board  extends TimeStamped {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-//    @Column(name = "users_username")
-//    private String username;
+    @Column
+    private Long likenum;
 
     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
+    private List<LikeBoard> likeBoards = new ArrayList<>();
 
     public Board (BoardRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
         this.contents =requestDto.getContents();
         this.user = user;
+        this.likenum = 0L;
     }
     public void update(BoardRequestDto requestDto){
         this.title = requestDto.getTitle();
         this.contents =requestDto.getContents();
     }
 
+    public void updateLikeNum(Long likenum){
+        this.likenum = likenum;
+    }
 
-    //댓글 관련 연관관계 아직 신경 안쓰셔도 됩니다!
-//    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
-//    private List<LikeBoard> likeBoards = new ArrayList<>();
 
     //각 역할에 맞는 Dto는 이름만 맞춰서 만들어 작업해주세요!
 //    public Board(BoardRequestDTO boardDto , User user) {
