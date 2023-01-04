@@ -45,6 +45,7 @@ class LikeCommentServiceTest {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
         when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
         when(likeCommentRepository.existsByUserAndComment(user, comment)).thenReturn(false);
+
         //when
         String s = likeCommentService.clickFavorite(comment.getId(), user.getUsername());
 
