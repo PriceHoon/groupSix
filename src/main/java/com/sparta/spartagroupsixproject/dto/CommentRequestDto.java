@@ -9,4 +9,3 @@ public class CommentRequestDto {
 
     private String content;
 }
-
