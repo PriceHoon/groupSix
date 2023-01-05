@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-//    private final PasswordEncoder passwordEncoder;
+
+    private final PasswordEncoder passwordEncoder;
 
     // ADMIN_TOKEN
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
@@ -29,12 +31,11 @@ public class UserService {
     @Transactional
     public String signup(SignupRequestDto signupRequestDto) {
         String username = signupRequestDto.getUsername();
-        String password = signupRequestDto.getPassword();
+        String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         // 회원 중복 확인
-        Optional<User> found = userRepository.findByUsername(username);
-        if (found.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+        if (userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("중복된 사용자가 존재합니다");
         }
 
         // 사용자 ROLE 확인
@@ -62,17 +63,11 @@ public class UserService {
         );
 
         // 비밀번호 확인
-        if (password.equals(user.getPassword())) {
-            String generatedToken = jwtUtil.createToken(user.getUsername(), user.getUserRoleEnum());
-            response.addHeader(JwtUtil.AUTHORIZATION_HEADER, generatedToken);
-            return "로그인 성공!";
-        } else {
-            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지않습니다");
         }
-//        if(!passwordEncoder.matches(password, user.getPassword())){
-//            throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//        }
 
-
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getUserRoleEnum()));
+        return "로그인이 완료 되었습니다";
     }
 }

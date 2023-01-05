@@ -10,3 +10,4 @@ public interface LikeBoardRepository extends JpaRepository<LikeBoard,Long> {
     LikeBoard findAllByBoardAndUser(Board board, User user);
 
 }
+

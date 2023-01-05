@@ -25,9 +25,7 @@ public class BoardResponseDto {
         this.contents = board.getContents();
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
-//        for(Comment comment : board.getComments()){
-//            commentList.add(new CommentResponseDto(comment));
-//        }
     }
 }
+
 
