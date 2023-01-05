@@ -36,6 +36,7 @@ public class CommentService {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
         ); //해당 게시글 찾는 과정
+
         Comment comment = new Comment(requestDto, user, board);
         commentRepository.save(comment);
         return new CommentResponseDto(comment);
@@ -43,26 +44,25 @@ public class CommentService {
 
 
     @Transactional
-    public CommentResponseDto updateComment(Long id, Long commentId, CommentRequestDto requestDto, User user) {
+    public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, User user, Long commentId) {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
         );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("수정할 댓글이 없습니다.")
         );
-
-
-        if (comment.isAuthenticatedUser(user.getId()) || user.isAdmin()) {
+        if (comment.isWriter(user.getId())) {
             comment.update(requestDto);
-        } else {
-            throw new IllegalArgumentException("댓글을 수정할 권한이 없습니다.");
+            CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
+            return commentResponseDto;
         }
+        throw new IllegalArgumentException("댓글을 수정할 권한이 없습니다.");
 
-        return new CommentResponseDto(comment);
     }
 
+
     @Transactional
-    public String deleteComment(Long id, Long commentId,User user ) {
+    public ResponseEntity deleteComment(Long id, User user, Long commentId) {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
         );
@@ -71,16 +71,15 @@ public class CommentService {
                 () -> new IllegalArgumentException("삭제할 댓글이 없습니다.")
         );
 
+        if (comment.isWriter(user.getId())) {
+            commentRepository.delete(comment);
+            return new ResponseEntity<>("삭제 성공!", HttpStatus.OK);
+        }
 
-            if (comment.isAuthenticatedUser(user.getId()) || user.isAdmin()) {
-                commentRepository.deleteById(id);
-            } else {
-                throw new IllegalArgumentException("댓글을 삭제할 권한이 없습니다.");
-            }
-
-        return "댓글 삭제 성공!";
+        throw new IllegalArgumentException("댓글을 삭제할 권한이 없습니다.");
     }
 }
+
 
 
 

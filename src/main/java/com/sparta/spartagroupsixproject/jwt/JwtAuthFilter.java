@@ -1,5 +1,6 @@
 package com.sparta.spartagroupsixproject.jwt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.spartagroupsixproject.dto.SecurityExceptionDto;
 import io.jsonwebtoken.Claims;
@@ -35,32 +36,28 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
             setAuthentication(info.getSubject());
-        } else {
-            jwtExceptionHandler(response, "Token Empty", HttpStatus.UNAUTHORIZED.value());
+        }else{
+            jwtExceptionHandler(response, "Token is null", HttpStatus.NOT_FOUND.value());
         }
         filterChain.doFilter(request, response);
-
     }
 
-    public void setAuthentication(String username) {
 
+    public void setAuthentication(String username) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = jwtUtil.createAuthentication(username);
         context.setAuthentication(authentication);
-
         SecurityContextHolder.setContext(context);
-
     }
 
     public void jwtExceptionHandler(HttpServletResponse response, String msg, int statusCode) {
         response.setStatus(statusCode);
         response.setContentType("application/json");
-        try {
-            String json = new ObjectMapper().writeValueAsString(new SecurityExceptionDto(statusCode, msg)); //토큰 오류를 Json타입으로 반환하기 위한 작업
-            response.getWriter().write(json);
+        try{
+            new ObjectMapper().writeValueAsString(new SecurityExceptionDto(statusCode, msg));
         } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
-
 }
+

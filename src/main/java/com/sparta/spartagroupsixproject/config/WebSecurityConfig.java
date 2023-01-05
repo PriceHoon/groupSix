@@ -4,6 +4,7 @@ package com.sparta.spartagroupsixproject.config;
 
 import com.sparta.spartagroupsixproject.jwt.JwtAuthFilter;
 import com.sparta.spartagroupsixproject.jwt.JwtUtil;
+import com.sparta.spartagroupsixproject.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -32,28 +33,28 @@ public class WebSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
-        //h2 - console 사용 및 resources접근 허용
-
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf()
+                .disable(); // RestAPI는 Stateless 속성을 가지고 있기에 diable해도 괜찮음
 
-        http.csrf().disable();
+        http
+                .authorizeHttpRequests()
+                .requestMatchers("/user/**").permitAll()
+                .anyRequest().authenticated();
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        http
+//                .formLogin();
 
-        http.authorizeHttpRequests().requestMatchers("/user/**").permitAll()
-                .anyRequest().authenticated()
-                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-
 
 }

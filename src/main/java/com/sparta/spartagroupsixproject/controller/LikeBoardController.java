@@ -26,8 +26,7 @@ public class LikeBoardController {
     private final Filter filter;
 
     @PostMapping("/board/{id}/like")
-    public ResponseEntity changeLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
+    public ResponseEntity changeLike(@PathVariable Long id,@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(likeBoardService.changeLike(id,userDetails.getUser()));
     }
 

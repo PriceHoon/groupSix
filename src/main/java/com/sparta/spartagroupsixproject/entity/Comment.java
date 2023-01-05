@@ -37,6 +37,9 @@ public class Comment extends TimeStamped {
         this.user = user;
     }
 
+    public boolean isWriter(Long userId){
+        return this.user.isValidUserId(userId) || this.user.isAdmin();
+    }
     public void update(CommentRequestDto requestDto){
         this.content = requestDto.getContent();
     }

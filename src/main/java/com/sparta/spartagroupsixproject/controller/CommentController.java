@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,14 +25,13 @@ public class CommentController {
     }
 
     @PutMapping("/board/{id}/comment/{commentId}")
-    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long id,@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails  ){
-        CommentResponseDto commentResponseDto = commentService.updateComment(id,commentId, commentRequestDto,userDetails.getUser());
+    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId ){
+        CommentResponseDto commentResponseDto = commentService.updateComment(id, commentRequestDto,userDetails.getUser(),commentId);
         return ResponseEntity.status(HttpStatus.OK).body(commentResponseDto);
     }
 
     @DeleteMapping("/board/{id}/comment/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable Long id, @PathVariable Long commentId,@AuthenticationPrincipal UserDetailsImpl userDetails ){
-       String msg =  commentService.deleteComment(id,commentId,userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(msg);
+    public ResponseEntity deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId){
+        return commentService.deleteComment(id,userDetails.getUser(),commentId);
     }
 }

@@ -2,6 +2,7 @@ package com.sparta.spartagroupsixproject.jwt;
 
 
 import com.sparta.spartagroupsixproject.entity.UserRoleEnum;
+import com.sparta.spartagroupsixproject.security.UserDetailsImpl;
 import com.sparta.spartagroupsixproject.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -25,12 +26,14 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtUtil {
 
+    private final UserDetailsServiceImpl userDetailsService;
+
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
     private static final long TOKEN_TIME = 60 * 60 * 1000L;
 
-    private final UserDetailsServiceImpl userDetailsService;
+    //private final UserDetailsServiceImpl userDetailsService;
 
 
 
@@ -92,10 +95,16 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    // 인증 객체 생성
     public Authentication createAuthentication(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
+//    // 인증 객체 생성
+//    public Authentication createAuthentication(String username) {
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//    }
+
 }
+

@@ -36,3 +36,4 @@ public class LikeBoard {
         this.isCheck = isCheck;
     }
 }
+

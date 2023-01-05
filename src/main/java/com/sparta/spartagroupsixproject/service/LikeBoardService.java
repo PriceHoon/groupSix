@@ -23,7 +23,6 @@ public class LikeBoardService {
     @Transactional
     public LikeBoardResponseDto changeLike(Long id, User user) {
 
-
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("좋아요를 누를 게시글이 없습니다!")
         );
@@ -31,7 +30,7 @@ public class LikeBoardService {
 
         LikeBoard likeBoard = likeBoardRepository.findAllByBoardAndUser(board, user);
 
-        if(likeBoard==null) {
+        if (likeBoard == null) {
 
             LikeBoard likeBoardFirst = new LikeBoard(user, board, true);
             likeBoardRepository.saveAndFlush(likeBoardFirst);
@@ -42,7 +41,8 @@ public class LikeBoardService {
 
             return new LikeBoardResponseDto("좋아요 최초생성!", HttpStatus.OK.value());
 
-        }else{
+
+        } else {
             if (likeBoard.isCheck()) {
 
                 likeBoard.update(false);

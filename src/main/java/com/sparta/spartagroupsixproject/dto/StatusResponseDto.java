@@ -14,3 +14,4 @@ public class StatusResponseDto {
     private String msg;
     private HttpStatusCode httpStatusCode;
 }
+
