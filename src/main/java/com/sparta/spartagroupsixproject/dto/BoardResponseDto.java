@@ -14,7 +14,7 @@ public class BoardResponseDto {
 
     private String username;
 
-    private String contents;
+    private String content;
     private LocalDateTime createdAt;
 
     private Long likenum;
@@ -24,7 +24,7 @@ public class BoardResponseDto {
     public BoardResponseDto(Board board ) {
         this.title = board.getTitle();
         this.username = board.getUser().getUsername();
-        this.contents = board.getContent();
+        this.content = board.getContent();
         this.likenum = board.getLikenum();
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
