@@ -15,3 +15,4 @@ public class LikeBoardResponseDto {
         this.statusCode = statusCode;
     }
 }
+

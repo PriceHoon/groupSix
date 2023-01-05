@@ -5,6 +5,7 @@ import com.sparta.spartagroupsixproject.dto.BoardRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-
 public class Board  extends TimeStamped {
 
 
@@ -57,18 +57,9 @@ public class Board  extends TimeStamped {
         this.likenum = likenum;
     }
 
-
-    //각 역할에 맞는 Dto는 이름만 맞춰서 만들어 작업해주세요!
-//    public Board(BoardRequestDTO boardDto , User user) {
-//        this.title = boardDto.getTitle();
-//        this.contents = boardDto.getContents();
-//        this.user = user;
-//    }
-
-   // public void update(BoardRequestDTO boardDto){
-//        this.title = boardDto.getTitle();
-//        this.contents = boardDto.getContents();
-//    }
+    public boolean isWriter(Long userId){
+        return this.user.isValidUserId(userId) || this.user.isAdmin();
+    }
 
 
 }

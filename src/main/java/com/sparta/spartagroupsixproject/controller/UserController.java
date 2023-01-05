@@ -24,12 +24,12 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping("/signup")
+    @PostMapping("/signup/")
     public ResponseEntity<StatusResponseDto> signup(@RequestBody @Valid SignupRequestDto requestDto) {
         String msg = userService.signup(requestDto);
         StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.OK);
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @PostMapping("/login")
@@ -39,7 +39,7 @@ public class UserController {
         String msg = userService.login(requestDto, response);
         StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.OK);
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }
 

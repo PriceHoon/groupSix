@@ -32,13 +32,11 @@ public class User {
         this.userRoleEnum = userRoleEnum;
     }
 
+    public boolean isValidUserId(Long userId) {
+        return this.id.equals(userId);
+    }
+    public boolean isAdmin(){
+        return this.userRoleEnum.equals(UserRoleEnum.ADMIN);
+    }
 
-
-
-    //각 역할에 맞는 Dto는 이름만 맞춰서 만들어 작업해주세요!
-//    public User(SignUpRequestDto signUpDto) {
-//        this.username = signUpDto.getUsername();
-//        this.pwd = signUpDto.getPwd();
-//        this.userRoleEnum = signUpDto.getUserRoleEnum();
-//    }
 }
