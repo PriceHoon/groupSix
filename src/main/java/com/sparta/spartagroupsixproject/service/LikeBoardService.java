@@ -21,7 +21,7 @@ public class LikeBoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public LikeBoardResponseDto changeLike(Long id, User user) {
+    public LikeBoardResponseDto update(Long id, User user) {
 
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("좋아요를 누를 게시글이 없습니다!")
@@ -41,8 +41,37 @@ public class LikeBoardService {
 
             return new LikeBoardResponseDto("좋아요 최초생성!", HttpStatus.OK.value());
 
+        } else {
+
+            if(likeBoard.isCheck()){
+                return new LikeBoardResponseDto("이미 좋아요가 눌려있어요!!", HttpStatus.BAD_REQUEST.value());
+            }
+
+            likeBoard.update(true);
+            log.info("좋아요 다시 생성!(눌림)");
+            Long updateLikeNum = getLikeNum(board);
+            board.updateLikeNum(updateLikeNum);
+            log.info("좋아요 다시 생성!(눌림) 갯수 => " + updateLikeNum);
+            return new LikeBoardResponseDto("좋아요 다시 생성!(눌림)", HttpStatus.OK.value());
+        }
+    }
+
+
+    @Transactional
+    public LikeBoardResponseDto cancelLike(Long id, User user) {
+
+        Board board = boardRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("좋아요 취소하기 위한 게시글이 없습니다!")
+        );
+
+        LikeBoard likeBoard = likeBoardRepository.findAllByBoardAndUser(board, user);
+
+        if (likeBoard == null) {
+
+            return new LikeBoardResponseDto("좋아요 누른적 없음!", HttpStatus.BAD_REQUEST.value());
 
         } else {
+
             if (likeBoard.isCheck()) {
 
                 likeBoard.update(false);
@@ -54,19 +83,16 @@ public class LikeBoardService {
                 return new LikeBoardResponseDto("좋아요 다시 눌러서 풀림!", HttpStatus.OK.value());
 
             } else {
-                likeBoard.update(true);
-                log.info("좋아요 다시 생성!(눌림)");
-                Long updateLikeNum = getLikeNum(board);
-                board.updateLikeNum(updateLikeNum);
-                log.info("좋아요 다시 생성!(눌림) 갯수 => " + updateLikeNum);
-                return new LikeBoardResponseDto("좋아요 다시 생성!(눌림)", HttpStatus.OK.value());
+                return new LikeBoardResponseDto("이미 좋아요를 취소하셨습니다!", HttpStatus.BAD_REQUEST.value());
             }
         }
 
-
     }
+
 
     public Long getLikeNum(Board board) {
         return board.getLikeBoards().stream().filter(s -> s.isCheck()).count();
     }
+
+
 }

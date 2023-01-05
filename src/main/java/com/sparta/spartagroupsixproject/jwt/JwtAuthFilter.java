@@ -29,6 +29,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = jwtUtil.resolveToken(request);
 
+        log.info(request.getRequestURI().trim());
+
+
         if (token != null) {
             if (!jwtUtil.validateToken(token)) {
                 jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED.value());
@@ -38,6 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             setAuthentication(info.getSubject());
         }else{
             jwtExceptionHandler(response, "Token is null", HttpStatus.NOT_FOUND.value());
+            return;
         }
         filterChain.doFilter(request, response);
     }
@@ -54,7 +58,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         response.setStatus(statusCode);
         response.setContentType("application/json");
         try{
-            new ObjectMapper().writeValueAsString(new SecurityExceptionDto(statusCode, msg));
+            String json = new ObjectMapper().writeValueAsString(new SecurityExceptionDto(statusCode, msg));
+            response.getWriter().write(json);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
