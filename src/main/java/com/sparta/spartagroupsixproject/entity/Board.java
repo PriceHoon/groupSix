@@ -44,13 +44,13 @@ public class Board  extends TimeStamped {
 
     public Board (BoardRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
-        this.content =requestDto.getContents();
+        this.content =requestDto.getContent();
         this.user = user;
         this.likenum = 0L;
     }
     public void update(BoardRequestDto requestDto){
         this.title = requestDto.getTitle();
-        this.content =requestDto.getContents();
+        this.content =requestDto.getContent();
     }
 
     public void updateLikeNum(Long likenum){
