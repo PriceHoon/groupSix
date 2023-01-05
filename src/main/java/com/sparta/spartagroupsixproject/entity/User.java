@@ -3,6 +3,7 @@ package com.sparta.spartagroupsixproject.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,7 +33,20 @@ public class User {
         this.userRoleEnum = userRoleEnum;
     }
 
+    public boolean isAdmin() {
 
+        if(this.userRoleEnum.equals(UserRoleEnum.ADMIN)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isVaildUser(Long userId) {
+        if(this.id == userId){
+            return true;
+        }
+        return false;
+    }
 
 
     //각 역할에 맞는 Dto는 이름만 맞춰서 만들어 작업해주세요!

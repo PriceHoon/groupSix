@@ -41,4 +41,12 @@ public class Comment extends TimeStamped {
         this.content = requestDto.getContent();
     }
 
+    public boolean isAuthenticatedUser(Long id) {
+
+        if(user.isVaildUser(id)){
+            return true;
+        }
+        return false;
+
+    }
 }

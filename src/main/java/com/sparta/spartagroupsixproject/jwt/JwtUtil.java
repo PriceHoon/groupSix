@@ -2,6 +2,7 @@ package com.sparta.spartagroupsixproject.jwt;
 
 
 import com.sparta.spartagroupsixproject.entity.UserRoleEnum;
+import com.sparta.spartagroupsixproject.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -9,6 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -26,7 +30,7 @@ public class JwtUtil {
     private static final String BEARER_PREFIX = "Bearer ";
     private static final long TOKEN_TIME = 60 * 60 * 1000L;
 
-    //private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
 
 
@@ -88,10 +92,10 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-//    // 인증 객체 생성
-//    public Authentication createAuthentication(String username) {
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//    }
+    // 인증 객체 생성
+    public Authentication createAuthentication(String username) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
 
 }

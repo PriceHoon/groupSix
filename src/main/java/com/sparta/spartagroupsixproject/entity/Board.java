@@ -3,19 +3,20 @@ package com.sparta.spartagroupsixproject.entity;
 
 import com.sparta.spartagroupsixproject.dto.BoardRequestDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
 @Entity
-
+@NoArgsConstructor
 public class Board  extends TimeStamped {
-
-
 
 
     @Id
@@ -56,6 +57,14 @@ public class Board  extends TimeStamped {
     public void updateLikeNum(Long likenum){
         this.likenum = likenum;
     }
+
+    public boolean isAuthenticatedUser(Long userId) {
+        if(this.user.isVaildUser(userId)){
+            return true;
+        }
+        return false;
+    }
+
 
 
     //각 역할에 맞는 Dto는 이름만 맞춰서 만들어 작업해주세요!

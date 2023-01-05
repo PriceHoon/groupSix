@@ -42,7 +42,6 @@ public class LikeBoardService {
 
             return new LikeBoardResponseDto("좋아요 최초생성!", HttpStatus.OK.value());
 
-
         }else{
             if (likeBoard.isCheck()) {
 
