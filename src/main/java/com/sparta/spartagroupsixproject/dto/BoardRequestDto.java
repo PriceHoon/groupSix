@@ -11,7 +11,7 @@ public class BoardRequestDto {
 
     private String title;
 
-    private String contents;
+    private String content;
 
 }
 
