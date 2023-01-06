@@ -73,7 +73,7 @@ public class CommentService {
 
         if (comment.isWriter(user.getId())) {
             commentRepository.delete(comment);
-            return new ResponseEntity<>("삭제 성공!", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("삭제 성공!", HttpStatus.OK);
         }
 
         throw new IllegalArgumentException("댓글을 삭제할 권한이 없습니다.");
