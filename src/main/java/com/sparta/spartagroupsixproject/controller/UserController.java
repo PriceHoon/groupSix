@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,15 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<StatusResponseDto> signup(@RequestBody @Valid SignupRequestDto requestDto) {
+    public ResponseEntity<StatusResponseDto> signup(@RequestBody @Valid SignupRequestDto requestDto, BindingResult bindingResult) {
+
+        //아이디 패스워드의 형식이 맞는지 검증 (완료)
+
+        if (bindingResult.hasErrors()) {
+            StatusResponseDto responseDto = new StatusResponseDto("형식에 맞게 작성 해주세요!", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto);
+        }
+
         String msg = userService.signup(requestDto);
         StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.OK);
 
