@@ -85,7 +85,7 @@ public class BoardService {
 
         if (board.isWriter(user.getId())) {
             boardRepository.delete(board);
-            return new ResponseEntity<>("게시글 삭제 성공.", HttpStatus.OK);
+            return new ResponseEntity<>("게시글 삭제 성공.", HttpStatus.NO_CONTENT);
         } else {
             throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
 

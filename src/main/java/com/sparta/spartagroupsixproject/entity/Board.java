@@ -19,7 +19,7 @@ public class Board  extends TimeStamped {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -27,7 +27,7 @@ public class Board  extends TimeStamped {
 
 
     @Column(nullable = false)
-    private String contents;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
@@ -44,13 +44,13 @@ public class Board  extends TimeStamped {
 
     public Board (BoardRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
-        this.contents =requestDto.getContents();
+        this.content =requestDto.getContent();
         this.user = user;
         this.likenum = 0L;
     }
     public void update(BoardRequestDto requestDto){
         this.title = requestDto.getTitle();
-        this.contents =requestDto.getContents();
+        this.content =requestDto.getContent();
     }
 
     public void updateLikeNum(Long likenum){

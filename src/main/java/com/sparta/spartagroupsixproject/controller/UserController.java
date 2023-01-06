@@ -24,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping("/signup/")
+    @PostMapping("/signup")
     public ResponseEntity<StatusResponseDto> signup(@RequestBody @Valid SignupRequestDto requestDto) {
         String msg = userService.signup(requestDto);
         StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.OK);
