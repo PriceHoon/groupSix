@@ -36,7 +36,7 @@ public class UserController {
         }
 
         String msg = userService.signup(requestDto);
-        StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.OK);
+        StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.CREATED);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
