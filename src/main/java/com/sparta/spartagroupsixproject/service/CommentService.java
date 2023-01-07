@@ -62,7 +62,7 @@ public class CommentService {
 
 
     @Transactional
-    public ResponseEntity deleteComment(Long id, User user, Long commentId) {
+    public String deleteComment(Long id, User user, Long commentId) {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
         );
@@ -73,7 +73,7 @@ public class CommentService {
 
         if (comment.isWriter(user.getId())) {
             commentRepository.delete(comment);
-            return new ResponseEntity<>("삭제 성공!", HttpStatus.OK);
+            return "삭제 성공!";
         }
 
         throw new IllegalArgumentException("댓글을 삭제할 권한이 없습니다.");

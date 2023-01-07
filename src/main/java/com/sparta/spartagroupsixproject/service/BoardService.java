@@ -77,7 +77,7 @@ public class BoardService {
 
 
     @Transactional
-    public ResponseEntity<String> delete(Long id, User user) {
+    public String delete(Long id, User user) {
         //선택한 게시글 찾기
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("삭제하고자 하는 게시글이 없습니다!")
@@ -85,7 +85,7 @@ public class BoardService {
 
         if (board.isWriter(user.getId())) {
             boardRepository.delete(board);
-            return new ResponseEntity<>("게시글 삭제 성공.", HttpStatus.OK);
+            return "게시글 삭제 성공.";
         } else {
             throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
 

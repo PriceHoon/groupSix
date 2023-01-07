@@ -55,7 +55,8 @@ public class BoardController {
     //게시글 삭제
     @DeleteMapping("/board/list/{id}")
     public ResponseEntity<String> deleteBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return boardService.delete(id, userDetails.getUser());
+        String msg = boardService.delete(id, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(msg);
     }
 
 
