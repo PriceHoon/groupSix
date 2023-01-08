@@ -2,18 +2,12 @@ package com.sparta.spartagroupsixproject.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-//@NoArgsConstructor
-//@SuperBuilder
-@Builder
-@AllArgsConstructor
+@NoArgsConstructor
 public class LikeBoard {
 
     @Id
@@ -23,14 +17,18 @@ public class LikeBoard {
     @Column(nullable = false)
     private boolean isCheck;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
-    @Column(nullable = false)
-    private Long boardId;
+    @ManyToOne
+    @JoinColumn(name = "BOARD_ID")
+    private Board board;
 
-    public LikeBoard() {
-
+    public LikeBoard(User user, Board board,boolean isCheck) {
+        this.user = user;
+        this.board = board;
+        this.isCheck = isCheck;
     }
 
 

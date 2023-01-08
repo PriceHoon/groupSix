@@ -28,11 +28,11 @@ public class LikeBoardService {
         );
 
 
-        LikeBoard likeBoard = likeBoardRepository.findAllByBoardIdAndUserId(id, user.getId());
+        LikeBoard likeBoard = likeBoardRepository.findAllByBoardAndUser(board, user);
 
         if (likeBoard == null) {
 
-            LikeBoard likeBoardFirst = LikeBoard.builder().boardId(board.getId()).isCheck(true).userId(user.getId()).build();
+            LikeBoard likeBoardFirst = new LikeBoard(user, board, true);
             likeBoardRepository.saveAndFlush(likeBoardFirst);
 
             Long updateLikeNum = getLikeNum(board);
@@ -64,7 +64,7 @@ public class LikeBoardService {
                 () -> new IllegalArgumentException("좋아요 취소하기 위한 게시글이 없습니다!")
         );
 
-        LikeBoard likeBoard = likeBoardRepository.findAllByBoardIdAndUserId(id, user.getId());
+        LikeBoard likeBoard = likeBoardRepository.findAllByBoardAndUser(board, user);
 
         if (likeBoard == null) {
 
@@ -91,7 +91,7 @@ public class LikeBoardService {
 
 
     public Long getLikeNum(Board board) {
-        return board.getLikenum();
+        return board.getLikeBoards().stream().filter(s -> s.isCheck()).count();
     }
 
 

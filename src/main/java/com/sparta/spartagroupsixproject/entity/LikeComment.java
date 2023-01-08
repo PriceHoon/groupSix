@@ -3,31 +3,29 @@ package com.sparta.spartagroupsixproject.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Getter
-//@NoArgsConstructor
+@NoArgsConstructor
 @Entity
-//@SuperBuilder
-@Builder
-@AllArgsConstructor
 public class LikeComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @Column(nullable = false)
-    private Long commentId;
+    @ManyToOne
+    @JoinColumn(name = "commentID")
+    private Comment comment;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "userID")
+    private User user;
 
-    public LikeComment() {
-
+    public LikeComment(User user,Comment comment) {
+        this.comment = comment;
+        this.user = user;
     }
 }
 

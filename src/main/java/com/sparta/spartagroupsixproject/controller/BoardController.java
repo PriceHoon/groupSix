@@ -32,7 +32,7 @@ public class BoardController {
 
     //      게시글 생성
     @PostMapping("/board/list")
-    public ResponseEntity createBoard(@RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 응답 보내기
         return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(requestDto, userDetails.getUser()));
 
@@ -48,15 +48,14 @@ public class BoardController {
 
     //게시글 수정
     @PutMapping("/board/list/{id}")
-    public ResponseEntity updateBoard(@PathVariable Long id, @RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id, @RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(boardService.update(id, requestDto, userDetails.getUser()));
     }
 
     //게시글 삭제
     @DeleteMapping("/board/list/{id}")
     public ResponseEntity<String> deleteBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String msg = boardService.delete(id, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(msg);
+        return boardService.delete(id, userDetails.getUser());
     }
 
 

@@ -3,7 +3,10 @@ package com.sparta.spartagroupsixproject.service;
 
 import com.sparta.spartagroupsixproject.dto.CommentRequestDto;
 import com.sparta.spartagroupsixproject.dto.CommentResponseDto;
-import com.sparta.spartagroupsixproject.entity.*;
+import com.sparta.spartagroupsixproject.entity.Board;
+import com.sparta.spartagroupsixproject.entity.Comment;
+import com.sparta.spartagroupsixproject.entity.LikeComment;
+import com.sparta.spartagroupsixproject.entity.User;
 import com.sparta.spartagroupsixproject.jwt.JwtUtil;
 import com.sparta.spartagroupsixproject.repository.BoardRepository;
 import com.sparta.spartagroupsixproject.repository.CommentRepository;
@@ -25,15 +28,16 @@ public class CommentService {
     private final UserRepository userRepository;
 
     private final LikeCommentRepository likeCommentRepository;
+    private final JwtUtil jwtUtil;
 
     @Transactional
-    public CommentResponseDto createComment(Long id, CommentRequestDto requestDto, Long userId) {
+    public CommentResponseDto createComment(Long id, CommentRequestDto requestDto, User user) {
 
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
         ); //해당 게시글 찾는 과정
 
-        Comment comment = Comment.builder().boardId(board.getId()).content(requestDto.getContent()).userId(userId).likenum(0L).build();
+        Comment comment = new Comment(requestDto, user, board,0L);
         commentRepository.save(comment);
         return new CommentResponseDto(comment);
     }
@@ -41,10 +45,13 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, User user, Long commentId) {
+        Board board = boardRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
+        );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("수정할 댓글이 없습니다.")
         );
-        if (comment.isWriter(user.getId())|| user.isAdmin()) {
+        if (comment.isWriter(user.getId())) {
             comment.update(requestDto);
             CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
             return commentResponseDto;
@@ -55,14 +62,18 @@ public class CommentService {
 
 
     @Transactional
-    public String deleteComment(Long id, User user, Long commentId) {
+    public ResponseEntity deleteComment(Long id, User user, Long commentId) {
+        Board board = boardRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
+        );
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("삭제할 댓글이 없습니다.")
         );
 
-        if (comment.isWriter(user.getId())|| user.isAdmin()) {
+        if (comment.isWriter(user.getId())) {
             commentRepository.delete(comment);
-            return "삭제 성공!";
+            return new ResponseEntity<>("삭제 성공!", HttpStatus.OK);
         }
 
         throw new IllegalArgumentException("댓글을 삭제할 권한이 없습니다.");
@@ -74,7 +85,7 @@ public class CommentService {
                 () -> new IllegalArgumentException("조회 할 댓글이 없습니다.")
         );
 
-        Long count = likeCommentRepository.findAllByCommentId(commentId).stream().count();
+        Long count = likeCommentRepository.findAllByComment(comment).stream().count();
         comment.updateLikeNum(count);
 
         return new CommentResponseDto(comment);

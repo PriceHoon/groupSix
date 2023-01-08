@@ -3,15 +3,11 @@ package com.sparta.spartagroupsixproject.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Entity(name = "users")
 @Getter
-//@NoArgsConstructor
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -30,14 +26,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum userRoleEnum; //회원 권한 부여하기 (ADMIN, USER) - ADMIN 회원은 모든 게시글 수정 / 삭제 가능
 
-    /**
-     *
-     * @param userId
-     * @return
-     * superbuilder를 하면 무조건 기능이 된다
-     * builder + NoArgs = x
-     * builder + 기본생성자 = O
-     */
+    public User(String username, String password, UserRoleEnum userRoleEnum) {
+        this.username = username;
+        this.password = password;
+        this.userRoleEnum = userRoleEnum;
+    }
 
     public boolean isValidUserId(Long userId) {
         return this.id.equals(userId);

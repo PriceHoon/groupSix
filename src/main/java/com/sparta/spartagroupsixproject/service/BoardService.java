@@ -25,6 +25,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     //게시글 전체 조회
     @Transactional
@@ -33,20 +34,20 @@ public class BoardService {
         List<Board> boards = boardRepository.findAllByOrderByModifiedAtDesc();
         List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
 
+
         for (Board board : boards) {
-            User user = userRepository.findById(board.getUserId()).orElse(User.builder().username("삭제된 사용자입니다").build());
-            boardResponseDtoList.add(new BoardResponseDto(board,user.getUsername()));
+            boardResponseDtoList.add(new BoardResponseDto(board));
         }
         return boardResponseDtoList;
     }
 
     //게시글 생성
     @Transactional
-    public String createBoard(BoardRequestDto requestDto, User user) {
+    public BoardResponseDto createBoard(BoardRequestDto requestDto, User user) {
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
-        Board board = Board.builder().title(requestDto.getTitle()).content(requestDto.getContent()).userId(user.getId()).likenum(0L).build();
-        boardRepository.save(board);
-        return "게시글 생성완료";
+        Board board = new Board(requestDto, user);
+        boardRepository.saveAndFlush(board);
+        return new BoardResponseDto(board);
     }
 
 
@@ -54,23 +55,21 @@ public class BoardService {
     @Transactional
     public BoardResponseDto findBoardById(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
-        String username = userRepository.findById(board.getUserId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다")).getUsername();
-        return new BoardResponseDto(board, username);
+        return new BoardResponseDto(board);
     }
 
     // 게시물 수정
     @Transactional
-    public String update(Long id, BoardRequestDto requestDto, User user) {
+    public BoardResponseDto update(Long id, BoardRequestDto requestDto, User user) {
 
         //선택한 게시글 찾기
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("수정하고자 하는 게시글이 없습니다!")
         );
 
-        if (board.isWriter(user.getId())|| user.isAdmin()) {
+        if (board.isWriter(user.getId())) {
             board.update(requestDto);
-
-            return "해당 게시물이 수정되었습니다";
+            return new BoardResponseDto(board);
         } else {
             throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 수정할 수 없습니다!");
         }
@@ -78,15 +77,15 @@ public class BoardService {
 
 
     @Transactional
-    public String delete(Long id, User user) {
+    public ResponseEntity<String> delete(Long id, User user) {
         //선택한 게시글 찾기
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("삭제하고자 하는 게시글이 없습니다!")
         );
 
-        if (board.isWriter(user.getId())|| user.isAdmin()) {
+        if (board.isWriter(user.getId())) {
             boardRepository.delete(board);
-            return "게시글 삭제 성공.";
+            return new ResponseEntity<>("게시글 삭제 성공.", HttpStatus.OK);
         } else {
             throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
 

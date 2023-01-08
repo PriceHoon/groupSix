@@ -3,20 +3,20 @@ package com.sparta.spartagroupsixproject.entity;
 
 import com.sparta.spartagroupsixproject.dto.BoardRequestDto;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-@SuperBuilder
-public class Board extends TimeStamped {
+public class Board  extends TimeStamped {
+
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,26 +29,36 @@ public class Board extends TimeStamped {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
-    @Column(nullable = false)
+    @Column
     private Long likenum;
 
-    public void update(BoardRequestDto requestDto) {
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
+    private List<LikeBoard> likeBoards = new ArrayList<>();
+
+    public Board (BoardRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
-        this.content = requestDto.getContent();
+        this.content =requestDto.getContent();
+        this.user = user;
+        this.likenum = 0L;
+    }
+    public void update(BoardRequestDto requestDto){
+        this.title = requestDto.getTitle();
+        this.content =requestDto.getContent();
     }
 
-    public void updateLikeNum(Long likenum) {
+    public void updateLikeNum(Long likenum){
         this.likenum = likenum;
     }
 
-    public boolean isWriter(Long userId) {
-        if (this.getUserId().equals(userId)) {
-            return true;
-        }
-        return false;
+    public boolean isWriter(Long userId){
+        return this.user.isValidUserId(userId) || this.user.isAdmin();
     }
 
 
