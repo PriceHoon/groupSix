@@ -12,10 +12,10 @@ import java.util.List;
 public interface LikeCommentRepository extends JpaRepository<LikeComment,Long> {
 
     //    LikeComment findByUserIdAndCommentId(, Comment comment);
-    boolean existsByUserAndComment(User user, Comment comment);
+    boolean existsByUserIdAndCommentId(Long userId, Long commentId);
 
-    List<LikeComment> findAllByComment(Comment comment);
+    List<LikeComment> findAllByCommentId(Long commentId);
 
-    LikeComment findByUserAndComment(User user, Comment comment);
+    LikeComment findByUserIdAndCommentId(Long userId, Long commentId);
 }
 

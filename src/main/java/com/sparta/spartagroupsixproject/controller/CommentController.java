@@ -21,7 +21,7 @@ public class CommentController {
 
     @PostMapping("/board/{id}/comment")
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        CommentResponseDto commentResponseDto = commentService.createComment(id, requestDto, userDetails.getUser());
+        CommentResponseDto commentResponseDto = commentService.createComment(id, requestDto, userDetails.getUser().getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(commentResponseDto);
     }
 
@@ -39,6 +39,7 @@ public class CommentController {
 
     @DeleteMapping("/board/{id}/comment/{commentId}")
     public ResponseEntity deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId){
-        return commentService.deleteComment(id,userDetails.getUser(),commentId);
+        String msg = commentService.deleteComment(id,userDetails.getUser(),commentId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(msg);
     }
 }
