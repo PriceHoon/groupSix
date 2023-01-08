@@ -3,14 +3,18 @@ package com.sparta.spartagroupsixproject.entity;
 
 import com.sparta.spartagroupsixproject.dto.CommentRequestDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-@Setter
+
 @Getter
-@Entity
 @NoArgsConstructor
+@Entity
+//@Builder
+@SuperBuilder
 public class Comment extends TimeStamped {
 
     @Id
@@ -24,25 +28,16 @@ public class Comment extends TimeStamped {
     private Long likenum;
 
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "BOARD_ID",nullable = false)
-    private Board board;
+    @Column(nullable = false)
+    private Long boardId;
 
 
-
-    public Comment (CommentRequestDto requestDto, User user, Board board,Long likenum){
-        this.content = requestDto.getContent();
-        this.board = board;
-        this.user = user;
-        this.likenum = likenum;
-    }
 
     public boolean isWriter(Long userId){
-        return this.user.isValidUserId(userId) || this.user.isAdmin();
+        return this.userId.equals(userId);
     }
     public void update(CommentRequestDto requestDto){
         this.content = requestDto.getContent();
@@ -50,13 +45,13 @@ public class Comment extends TimeStamped {
     public void updateLikeNum(Long likenum){
         this.likenum = likenum;
     }
-
-    public boolean isAuthenticatedUser(Long id) {
-
-        if(user.isValidUserId(id)){
-            return true;
-        }
-        return false;
-
-    }
+//
+//    public boolean isAuthenticatedUser(Long id) {
+//
+//        if(user.isValidUserId(id)){
+//            return true;
+//        }
+//        return false;
+//
+//    }
 }

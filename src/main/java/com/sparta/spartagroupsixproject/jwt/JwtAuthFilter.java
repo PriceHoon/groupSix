@@ -1,8 +1,7 @@
 package com.sparta.spartagroupsixproject.jwt;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.spartagroupsixproject.dto.SecurityExceptionDto;
+import com.sparta.spartagroupsixproject.dto.RestApiResponse;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,13 +33,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (token != null) {
             if (!jwtUtil.validateToken(token)) {
-                jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED.value());
+                jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED);
                 return;
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
             setAuthentication(info.getSubject());
         }else{
-            jwtExceptionHandler(response, "Token is null", HttpStatus.NOT_FOUND.value());
+            jwtExceptionHandler(response, "Token is null", HttpStatus.NOT_FOUND);
             return;
         }
         filterChain.doFilter(request, response);
@@ -54,11 +53,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(context);
     }
 
-    public void jwtExceptionHandler(HttpServletResponse response, String msg, int statusCode) {
-        response.setStatus(statusCode);
+    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus statusCode) {
+        response.setStatus(statusCode.value());
         response.setContentType("application/json");
         try{
-            String json = new ObjectMapper().writeValueAsString(new SecurityExceptionDto(statusCode, msg));
+            String json = new ObjectMapper().writeValueAsString(new RestApiResponse(statusCode, msg));
             response.getWriter().write(json);
         } catch (Exception e) {
             log.error(e.getMessage());

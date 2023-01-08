@@ -1,9 +1,8 @@
 package com.sparta.spartagroupsixproject.controller;
 
 import com.sparta.spartagroupsixproject.dto.LoginRequestDto;
+import com.sparta.spartagroupsixproject.dto.RestApiResponse;
 import com.sparta.spartagroupsixproject.dto.SignupRequestDto;
-import com.sparta.spartagroupsixproject.dto.StatusResponseDto;
-import com.sparta.spartagroupsixproject.jwt.JwtUtil;
 import com.sparta.spartagroupsixproject.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -26,29 +25,29 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<StatusResponseDto> signup(@RequestBody @Valid SignupRequestDto requestDto, BindingResult bindingResult) {
+    public ResponseEntity signup(@RequestBody @Valid SignupRequestDto requestDto, BindingResult bindingResult) {
 
         //아이디 패스워드의 형식이 맞는지 검증 (완료)
 
         if (bindingResult.hasErrors()) {
-            StatusResponseDto responseDto = new StatusResponseDto("형식에 맞게 작성 해주세요!", HttpStatus.BAD_REQUEST);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto);
+            RestApiResponse restApiResponse = new RestApiResponse(HttpStatus.BAD_REQUEST,"형식에 맞게 작성 해주세요!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restApiResponse);
         }
 
         String msg = userService.signup(requestDto);
-        StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.CREATED);
+        RestApiResponse restApiResponse = new RestApiResponse(HttpStatus.CREATED,msg);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(restApiResponse);
     }
 
     @PostMapping("/login")
 
-    public ResponseEntity<StatusResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+    public ResponseEntity login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
 
         String msg = userService.login(requestDto, response);
-        StatusResponseDto responseDto = new StatusResponseDto(msg, HttpStatus.OK);
+        RestApiResponse restApiResponse = new RestApiResponse(HttpStatus.OK,msg);
 
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(restApiResponse);
     }
 }
 

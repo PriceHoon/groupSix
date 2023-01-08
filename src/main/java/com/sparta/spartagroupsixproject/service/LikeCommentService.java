@@ -20,12 +20,12 @@ public class LikeCommentService {
 
 
     @Transactional
-    public String clickFavorite(Long CommentId, User user) throws Exception {
+    public String clickFavorite(Long commentId, User user) throws Exception {
 
-        Comment comment = commentRepository.findById(CommentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
-        if (!likeCommentRepository.existsByUserAndComment(user, comment)) {
-            LikeComment likeComment = new LikeComment(user, comment);
+        if (!likeCommentRepository.existsByUserIdAndCommentId(user.getId(), commentId)) {
+            LikeComment likeComment = LikeComment.builder().commentId(commentId).userId(user.getId()).build();
             likeCommentRepository.saveAndFlush(likeComment);
             comment.updateLikeNum(getCountLike(comment));
             return "좋아요를 누르셨습니다";
@@ -35,11 +35,11 @@ public class LikeCommentService {
 
     }
     @Transactional
-    public String cancelFavorite(Long CommentId, User user) throws Exception {
+    public String cancelFavorite(Long commentId, User user) throws Exception {
 
-        Comment comment = commentRepository.findById(CommentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지않습니다"));
 
-        LikeComment likeComment = likeCommentRepository.findByUserAndComment(user,comment);
+        LikeComment likeComment = likeCommentRepository.findByUserIdAndCommentId(user.getId(),commentId);
         if (likeComment!=null) {
             likeCommentRepository.delete(likeComment);
 //            comment.updateLikeNum(getCountLike(comment));
@@ -51,7 +51,7 @@ public class LikeCommentService {
 
 
     public Long getCountLike(Comment comment) {
-        Long count = likeCommentRepository.findAllByComment(comment).stream().count();
+        Long count = likeCommentRepository.findAllByCommentId(comment.getId()).stream().count();
         return count;
     }
 }
