@@ -47,7 +47,7 @@ public class UserService {
             userRoleEnum = UserRoleEnum.ADMIN;
         }
 
-        User user = new User(username, password, userRoleEnum);
+        User user = User.builder().username(username).password(password).userRoleEnum(userRoleEnum).build();
         userRepository.save(user);
         return "회원가입이 완료되었습니다.";
     }
