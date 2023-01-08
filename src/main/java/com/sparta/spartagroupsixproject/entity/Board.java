@@ -29,8 +29,8 @@ public class Board  extends TimeStamped {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "USER_ID" ,nullable = false)
     private User user;
 
     @Column

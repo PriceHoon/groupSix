@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,12 +33,14 @@ public class BoardService {
     public List<BoardResponseDto> getBoardAll() {
 
         List<Board> boards = boardRepository.findAllByOrderByModifiedAtDesc();
-        List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
+       // List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
 
+//        for 문으로 다 넣어주기 보다는 Stream을 사용해서 한줄로 표현하는게 훨씬 깔끔한 것 같아 수정.
+//        for (Board board : boards) {
+//            boardResponseDtoList.add(new BoardResponseDto(board));
+//        }
 
-        for (Board board : boards) {
-            boardResponseDtoList.add(new BoardResponseDto(board));
-        }
+        List<BoardResponseDto> boardResponseDtoList = boards.stream().map(b -> new BoardResponseDto(b)).collect(Collectors.toList());
         return boardResponseDtoList;
     }
 
