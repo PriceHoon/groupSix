@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeBoardRepository extends JpaRepository<LikeBoard,Long> {
 
-    LikeBoard findAllByBoardAndUser(Board board, User user);
+    LikeBoard findAllByBoardIdAndUserId(Long boardId, Long userId);
 
 }
 

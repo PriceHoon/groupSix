@@ -21,9 +21,9 @@ public class BoardResponseDto {
     private LocalDateTime modifiedAt;
 //    private List<CommentResponseDto> commentList = new ArrayList<>();
 
-    public BoardResponseDto(Board board ) {
+    public BoardResponseDto(Board board,String username) {
         this.title = board.getTitle();
-        this.username = board.getUser().getUsername();
+        this.username = username;
         this.content = board.getContent();
         this.likenum = board.getLikenum();
         this.createdAt = board.getCreatedAt();
