@@ -20,7 +20,7 @@ public class LikeCommentController {
 
     // 좋아요 클릭
     @PostMapping("/comment/{id}/like")
-    public ResponseEntity update(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+    public ResponseEntity updateLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         String msg = likeCommentService.clickFavorite(id, userDetails.getUser());
         RestApiResponse restApiResponse = new RestApiResponse(HttpStatus.OK, msg);
         return ResponseEntity.status(HttpStatus.OK).body(restApiResponse);
