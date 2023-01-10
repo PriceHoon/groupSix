@@ -35,6 +35,7 @@ public class Board extends TimeStamped {
     @Column(nullable = false)
     private Long likenum;
 
+
     public void update(BoardRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();

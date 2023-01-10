@@ -41,6 +41,7 @@ public class LikeCommentService {
 
         LikeComment likeComment = likeCommentRepository.findByUserIdAndCommentId(user.getId(),commentId);
         if (likeComment!=null) {
+
             likeCommentRepository.delete(likeComment);
 //            comment.updateLikeNum(getCountLike(comment));
             return "좋아요를 취소하였습니다";

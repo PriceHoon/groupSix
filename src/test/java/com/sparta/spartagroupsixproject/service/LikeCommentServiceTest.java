@@ -36,7 +36,7 @@ class LikeCommentServiceTest {
     LikeCommentService likeCommentService;
 
     @Test
-    @DisplayName("좋아요 성공 케이스")
+//    @DisplayName("좋아요 성공 케이스")
     void clickFavorite() throws Exception {
 
         //given
@@ -53,6 +53,12 @@ class LikeCommentServiceTest {
 
         //then
         Assertions.assertSame("좋아요를 누르셨습니다", s);
+
+
+        //given
+
+        //when
+        //then
     }
 
     @DisplayName("좋아요 실패 케이스")
