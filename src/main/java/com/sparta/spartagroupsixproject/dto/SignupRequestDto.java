@@ -4,11 +4,12 @@ package com.sparta.spartagroupsixproject.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Builder
 public class SignupRequestDto {
     //정규표현식
     @NotNull(message = "이름은 필수 값 입니다!!")
