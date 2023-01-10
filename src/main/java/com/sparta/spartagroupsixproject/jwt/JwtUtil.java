@@ -2,8 +2,8 @@ package com.sparta.spartagroupsixproject.jwt;
 
 
 import com.sparta.spartagroupsixproject.entity.UserRoleEnum;
-import com.sparta.spartagroupsixproject.security.UserDetailsImpl;
 import com.sparta.spartagroupsixproject.security.UserDetailsServiceImpl;
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

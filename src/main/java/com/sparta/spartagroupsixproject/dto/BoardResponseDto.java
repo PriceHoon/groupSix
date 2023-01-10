@@ -17,6 +17,13 @@ public class BoardResponseDto {
     private String content;
     private LocalDateTime createdAt;
 
+    public BoardResponseDto(String title, String username, String content, Long likenum) {
+        this.title = title;
+        this.username = username;
+        this.content = content;
+        this.likenum = likenum;
+    }
+
     private Long likenum;
     private LocalDateTime modifiedAt;
 //    private List<CommentResponseDto> commentList = new ArrayList<>();
