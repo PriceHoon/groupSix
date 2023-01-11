@@ -88,11 +88,19 @@ public class CommentService {
         commentRepository.deleteAllByUserId(userId);
     }
 
-//    public List<Long> getCommentId(User user){
-//        List<Comment> commentList = commentRepository.findAllByUser(user);
-//        return commentId;
-//
-//    }
+
+    //대댓글 해보자..
+    @Transactional
+    public CommentResponseDto createPlusComment(Long commentId, CommentRequestDto requestDto, Long userId) {
+
+        Comment parentComment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.")
+        ); //해당 댓글 찾는 과정
+
+        Comment comment = Comment.builder().parent(parentComment).content(requestDto.getContent()).userId(userId).likenum(0L).boardId(parentComment.getBoardId()).build();
+        commentRepository.save(comment);
+        return new CommentResponseDto(comment);
+    }
 }
 
 
