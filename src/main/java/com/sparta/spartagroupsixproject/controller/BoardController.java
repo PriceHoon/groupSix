@@ -3,10 +3,13 @@ package com.sparta.spartagroupsixproject.controller;
 
 import com.sparta.spartagroupsixproject.dto.BoardRequestDto;
 import com.sparta.spartagroupsixproject.dto.BoardResponseDto;
+import com.sparta.spartagroupsixproject.dto.PageDto;
+import com.sparta.spartagroupsixproject.entity.Board;
 import com.sparta.spartagroupsixproject.security.UserDetailsImpl;
 import com.sparta.spartagroupsixproject.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,10 +27,12 @@ public class BoardController {
 
 
 
-    //     게시글 전체 조회
+    // 게시글 전체 조회
     @GetMapping("/board/list")
-    public ResponseEntity<List<BoardResponseDto>> getBoardList() {
-        return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoardAll());
+    public ResponseEntity getBoardList(
+            @RequestBody PageDto pageDto
+            ) {
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoardAll(pageDto));
 
     }
 

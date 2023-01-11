@@ -3,18 +3,21 @@ package com.sparta.spartagroupsixproject.service;
 
 import com.sparta.spartagroupsixproject.dto.BoardRequestDto;
 import com.sparta.spartagroupsixproject.dto.BoardResponseDto;
+import com.sparta.spartagroupsixproject.dto.PageDto;
 import com.sparta.spartagroupsixproject.entity.Board;
 import com.sparta.spartagroupsixproject.entity.User;
 import com.sparta.spartagroupsixproject.jwt.JwtUtil;
 import com.sparta.spartagroupsixproject.repository.BoardRepository;
 import com.sparta.spartagroupsixproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,16 +31,20 @@ public class BoardService {
 
     //게시글 전체 조회
     @Transactional
-    public List<BoardResponseDto> getBoardAll() {
+    public Page<BoardResponseDto> getBoardAll(PageDto pageDto) {
 
-        List<Board> boards = boardRepository.findAllByOrderByModifiedAtDesc();
-        List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
+        Sort.Direction direction = pageDto.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, pageDto.getSortBy());
+        Pageable pageable = PageRequest.of(pageDto.getPage() - 1, pageDto.getSize(), sort);
 
-        for (Board board : boards) {
-            User user = userRepository.findById(board.getUserId()).orElse(User.builder().username("삭제된 사용자입니다").build());
-            boardResponseDtoList.add(new BoardResponseDto(board,user.getUsername()));
-        }
-        return boardResponseDtoList;
+        Page<Board> boards = boardRepository.findAllByOrderByModifiedAtDesc(pageable);
+        return new PageImpl<>(boards.stream().map(BoardResponseDto::new).collect(Collectors.toList()));
+
+//        for (Board board : boards) {
+//            User user = userRepository.findById(board.getUserId()).orElse(User.builder().username("삭제된 사용자입니다").build());
+//            boardResponseDtoList.add(new BoardResponseDto(board,user.getUsername()));
+//        }
+
     }
 
     //게시글 생성
@@ -93,6 +100,13 @@ public class BoardService {
         }
 
     }
+
+    @Transactional
+    public void deleteAllBoardByUser(Long userId){
+        boardRepository.deleteAllByUserId(userId);
+    }
+
+
 }
 
 

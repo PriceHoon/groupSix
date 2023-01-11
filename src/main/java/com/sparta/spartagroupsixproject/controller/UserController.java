@@ -3,17 +3,16 @@ package com.sparta.spartagroupsixproject.controller;
 import com.sparta.spartagroupsixproject.dto.LoginRequestDto;
 import com.sparta.spartagroupsixproject.dto.RestApiResponse;
 import com.sparta.spartagroupsixproject.dto.SignupRequestDto;
+import com.sparta.spartagroupsixproject.security.UserDetailsImpl;
 import com.sparta.spartagroupsixproject.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,6 +48,14 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(restApiResponse);
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity delete(@AuthenticationPrincipal UserDetailsImpl userDetails){
+
+       String msg = userService.delete(userDetails.getUser());
+       return ResponseEntity.status(HttpStatus.OK).body(msg);
+    }
+
 }
 
 //    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {

@@ -2,9 +2,13 @@ package com.sparta.spartagroupsixproject.service;
 
 import com.sparta.spartagroupsixproject.dto.LoginRequestDto;
 import com.sparta.spartagroupsixproject.dto.SignupRequestDto;
+import com.sparta.spartagroupsixproject.entity.Board;
+import com.sparta.spartagroupsixproject.entity.Comment;
 import com.sparta.spartagroupsixproject.entity.User;
 import com.sparta.spartagroupsixproject.entity.UserRoleEnum;
 import com.sparta.spartagroupsixproject.jwt.JwtUtil;
+import com.sparta.spartagroupsixproject.repository.BoardRepository;
+import com.sparta.spartagroupsixproject.repository.CommentRepository;
 import com.sparta.spartagroupsixproject.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +29,9 @@ public class UserService {
     private final JwtUtil jwtUtil;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final BoardService boardService;
+    private final CommentService commentService;
 
     // ADMIN_TOKEN
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
@@ -69,5 +77,21 @@ public class UserService {
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getUserRoleEnum()));
         return "로그인이 완료 되었습니다";
+    }
+
+    public String  delete(User user) {
+
+        String userName = user.getUsername();
+        //해당 유저에 관한 모든 정보를 지울 때 여기서 다 호출해서 쓰는게 맞을까 의문.
+        userRepository.deleteById(user.getId());
+        boardService.deleteAllBoardByUser(user.getId());
+        commentService.deleteCommentByUser(user.getId());
+
+
+//        List<Comment> commentList = commentRepository.findAllByUserId(user.getId())
+
+
+        return userName+"님이 탈퇴 되셨습니다, 관련 정보는 모두 사라집니다!";
+
     }
 }
