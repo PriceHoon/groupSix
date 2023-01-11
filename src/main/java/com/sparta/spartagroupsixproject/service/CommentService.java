@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 
@@ -40,7 +42,7 @@ public class CommentService {
 
 
     @Transactional
-    public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, User user, Long commentId) {
+    public CommentResponseDto updateComment( Long commentId,CommentRequestDto requestDto, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("수정할 댓글이 없습니다.")
         );
@@ -55,7 +57,7 @@ public class CommentService {
 
 
     @Transactional
-    public String deleteComment(Long id, User user, Long commentId) {
+    public String deleteComment(User user, Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("삭제할 댓글이 없습니다.")
         );
@@ -80,6 +82,17 @@ public class CommentService {
         return new CommentResponseDto(comment);
 
     }
+
+    @Transactional
+    public void deleteCommentByUser(Long userId){
+        commentRepository.deleteAllByUserId(userId);
+    }
+
+//    public List<Long> getCommentId(User user){
+//        List<Comment> commentList = commentRepository.findAllByUser(user);
+//        return commentId;
+//
+//    }
 }
 
 

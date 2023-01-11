@@ -36,7 +36,8 @@ public class WebSecurityConfig {
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .requestMatchers("/user/**");
+                .requestMatchers("/user/signup")
+                .requestMatchers("/user/login");
     }
 
     @Bean
