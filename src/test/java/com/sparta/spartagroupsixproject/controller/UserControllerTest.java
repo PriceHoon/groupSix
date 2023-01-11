@@ -1,6 +1,7 @@
 package com.sparta.spartagroupsixproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.spartagroupsixproject.dto.LoginRequestDto;
 import com.sparta.spartagroupsixproject.dto.SignupRequestDto;
 import com.sparta.spartagroupsixproject.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -55,9 +56,10 @@ class UserControllerTest {
     @Test
     @WithUserDetails
     void login() throws Exception {
+        LoginRequestDto requestDto = LoginRequestDto.builder().username("asdf123456").password("asdfas123").build();
 
-        mockMvc.perform(post("/user/login"))
-                .andExpect(status().is4xxClientError());
+        mockMvc.perform(post("/user/login").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(requestDto)).with(csrf()))
+                .andExpect(status().isOk());
 //                .andExpect(content().)
     }
 
