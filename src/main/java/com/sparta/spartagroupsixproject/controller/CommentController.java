@@ -31,15 +31,15 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(commentResponseDto);
     }
 
-    @PutMapping("/board/{id}/comment/{commentId}")
-    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId ){
-        CommentResponseDto commentResponseDto = commentService.updateComment(id, commentRequestDto,userDetails.getUser(),commentId);
+    @PutMapping("/board/comment/{commentId}")
+    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long commentId ,@RequestBody CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        CommentResponseDto commentResponseDto = commentService.updateComment(commentId,commentRequestDto,userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(commentResponseDto);
     }
 
-    @DeleteMapping("/board/{id}/comment/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId){
-        String msg = commentService.deleteComment(id,userDetails.getUser(),commentId);
+    @DeleteMapping("/board/comment/{commentId}")
+    public ResponseEntity deleteComment( @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId){
+        String msg = commentService.deleteComment(userDetails.getUser(),commentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(msg);
     }
 }

@@ -93,6 +93,13 @@ public class BoardService {
         }
 
     }
+
+    @Transactional
+    public void deleteAllBoardByUser(Long userId){
+        boardRepository.deleteAllByUserId(userId);
+    }
+
+
 }
 
 
