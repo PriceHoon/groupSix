@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @NoArgsConstructor
@@ -26,6 +29,16 @@ public class Comment extends TimeStamped {
 
     @Column
     private Long likenum;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PARENT_ID")
+    private Comment parent;
+
+    
+
+
+    @OneToMany(mappedBy = "parent",cascade = CascadeType.ALL)
+    private List<Comment> child = new ArrayList<>();
 
 
     @Column(nullable = false)

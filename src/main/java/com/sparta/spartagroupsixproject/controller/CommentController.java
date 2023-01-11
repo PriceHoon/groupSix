@@ -42,4 +42,12 @@ public class CommentController {
         String msg = commentService.deleteComment(userDetails.getUser(),commentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(msg);
     }
+
+    //대댓글 작업
+
+    @PostMapping("/board/comment/{commentId}")
+    public ResponseEntity<CommentResponseDto> createPlusComment(@PathVariable Long commentId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        CommentResponseDto commentResponseDto = commentService.createPlusComment(commentId, requestDto, userDetails.getUser().getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentResponseDto);
+    }
 }
