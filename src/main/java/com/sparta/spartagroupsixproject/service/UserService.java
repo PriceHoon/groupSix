@@ -79,11 +79,13 @@ public class UserService {
         return "로그인이 완료 되었습니다";
     }
 
+    @Transactional
     public String  delete(User user) {
 
         String userName = user.getUsername();
         //해당 유저에 관한 모든 정보를 지울 때 여기서 다 호출해서 쓰는게 맞을까 의문.
         userRepository.deleteById(user.getId());
+
         boardService.deleteAllBoardByUser(user.getId());
         commentService.deleteCommentByUser(user.getId());
 
