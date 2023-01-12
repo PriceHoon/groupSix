@@ -46,6 +46,7 @@ class UserControllerTest {
     @Test
     @WithUserDetails
     void signup() throws Exception {
+
         SignupRequestDto requestDto = SignupRequestDto.builder().username("asdf123456").password("asdasfsfsa123").admin(false).adminToken("").build();
 
         mockMvc.perform(post("/user/signup").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(requestDto)).with(csrf()))

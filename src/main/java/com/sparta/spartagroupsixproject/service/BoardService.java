@@ -38,6 +38,7 @@ public class BoardService {
         Pageable pageable = PageRequest.of(pageDto.getPage() - 1, pageDto.getSize(), sort);
 
         Page<Board> boards = boardRepository.findAllByOrderByModifiedAtDesc(pageable);
+
         return new PageImpl<>(boards.stream().map(BoardResponseDto::new).collect(Collectors.toList()));
 
 //        for (Board board : boards) {
