@@ -2,14 +2,13 @@ package com.sparta.spartagroupsixproject.service;
 
 import com.sparta.spartagroupsixproject.dto.LoginRequestDto;
 import com.sparta.spartagroupsixproject.dto.SignupRequestDto;
-import com.sparta.spartagroupsixproject.entity.Board;
-import com.sparta.spartagroupsixproject.entity.Comment;
 import com.sparta.spartagroupsixproject.entity.User;
 import com.sparta.spartagroupsixproject.entity.UserRoleEnum;
+import com.sparta.spartagroupsixproject.jwt.Filter;
+import com.sparta.spartagroupsixproject.jwt.JwtEnum;
 import com.sparta.spartagroupsixproject.jwt.JwtUtil;
-import com.sparta.spartagroupsixproject.repository.BoardRepository;
-import com.sparta.spartagroupsixproject.repository.CommentRepository;
 import com.sparta.spartagroupsixproject.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -17,9 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +28,8 @@ public class UserService {
 
     private final BoardService boardService;
     private final CommentService commentService;
+
+    private final Filter filter;
 
     // ADMIN_TOKEN
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
@@ -76,6 +74,7 @@ public class UserService {
         }
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getUserRoleEnum()));
+        response.addHeader(JwtUtil.REFRESH_HEADER, jwtUtil.createRefreshToken(user.getUsername(), JwtEnum.Refresh));
         return "로그인이 완료 되었습니다";
     }
 
@@ -95,5 +94,15 @@ public class UserService {
 
         return userName+"님이 탈퇴 되셨습니다, 관련 정보는 모두 사라집니다!";
 
+    }
+
+    public String getAccessToken(HttpServletRequest request, HttpServletResponse response) throws IllegalArgumentException {
+        if(jwtUtil.checkRefreshToken(request)) {
+            String username = filter.checkUser(request);
+            User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지않는 유저입니다"));
+            response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getUserRoleEnum()));
+            return "Access 토큰이 재생성 되었습니다.";
+        }
+        throw new IllegalArgumentException("해당 토큰은 기한이 지난 토큰입니다");
     }
 }
