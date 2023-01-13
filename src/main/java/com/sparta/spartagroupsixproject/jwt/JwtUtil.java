@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Date;
 
@@ -30,8 +31,13 @@ public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_KEY = "auth";
+
+    public static final String REFRESH_HEADER = "refresh";
+
+    private static final long TOKEN_TIME = 10* 1000L;
+    private static final long LONG_TOKEN_TIME = 60 * 60 * 100000L;
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long TOKEN_TIME = 60 * 60 * 1000L;
+
 
     //private final UserDetailsServiceImpl userDetailsService;
 
@@ -59,6 +65,14 @@ public class JwtUtil {
         return null;
     }
 
+    public String resolveRefreshToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(REFRESH_HEADER);   //Authorization bearer 띄고 Token == 토큰으로 나 자신을 인증하겠다
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
     // 토큰 생성
     public String createToken(String username, UserRoleEnum role) {
         Date date = new Date();
@@ -68,6 +82,19 @@ public class JwtUtil {
                         .setSubject(username)
                         .claim(AUTHORIZATION_KEY, role)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
+                        .setIssuedAt(date)
+                        .signWith(key, signatureAlgorithm)
+                        .compact();
+    }
+
+    public String createRefreshToken(String username, JwtEnum jwtEnum) {
+        Date date = new Date();
+
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setSubject(username)
+                        .claim(AUTHORIZATION_KEY, jwtEnum)
+                        .setExpiration(new Date(date.getTime() + LONG_TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
@@ -100,11 +127,28 @@ public class JwtUtil {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
+    public boolean checkRefreshToken(HttpServletRequest request) {
+        String token = resolveRefreshToken(request);
+        Claims claims ;
+        if (token != null) {
+            if (validateToken(token)) {
+                return true;
+                }else{
+                    return false;
+                }
+            }
+            else {
+                throw new IllegalArgumentException("Token Error");
+            }
+        }
+    }
+
+
 //    // 인증 객체 생성
 //    public Authentication createAuthentication(String username) {
 //        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 //        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 //    }
 
-}
+
 
