@@ -22,7 +22,7 @@ public class SignupRequestDto {
     @Size(min=8, max=15)
     private String password;    ////최소 8자 이상, 15자 이하이며 알파벳 대소문자(a~z, A~Z), 숫자(0~9)로 구성
 
-
     private boolean admin = false;
+
     private String adminToken = "";
 }

@@ -12,7 +12,7 @@ public class Filter {
     private final JwtUtil jwtUtil;
 
     public String checkUser(HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
+        String token = jwtUtil.resolveRefreshToken(request);
         Claims claims = createClaims(token);
         String username = claims.getSubject();
         return username;
