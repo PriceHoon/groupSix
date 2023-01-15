@@ -3,10 +3,7 @@ package com.sparta.spartagroupsixproject.entity;
 
 import com.sparta.spartagroupsixproject.dto.CommentRequestDto;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -17,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 //@Builder
+@AllArgsConstructor
 @SuperBuilder
 public class Comment extends TimeStamped {
 
@@ -34,9 +32,9 @@ public class Comment extends TimeStamped {
     @JoinColumn(name = "PARENT_ID")
     private Comment parent;
 
-    
 
 
+    @Builder.Default
     @OneToMany(mappedBy = "parent",cascade = CascadeType.ALL)
     private List<Comment> child = new ArrayList<>();
 

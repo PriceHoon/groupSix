@@ -38,7 +38,9 @@ public class WebSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .requestMatchers("/user/signup")
                 .requestMatchers("/user/login")
-                .requestMatchers("/refresh");
+                .requestMatchers("/refresh")
+                .requestMatchers("/docs/**");
+//                .requestMatchers("/api");
     }
 
     @Bean
